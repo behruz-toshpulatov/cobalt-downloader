@@ -20,3 +20,8 @@ docker-compose.yml
 
 # ide
 .vscode
+
+# build artifacts
+apps/backend/dist
+apps/frontend/.next
+apps/frontend/out

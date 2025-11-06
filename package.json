@@ -1,10 +1,17 @@
 {
-    "name": "cobalt",
-    "packageManager": "pnpm@9.6.0",
-    "engines": {
-        "pnpm": ">=9"
-    },
-    "scripts": {
-        "swagger": "node ./scripts/swagger.js"
-    }
+  "name": "cobalt",
+  "private": true,
+  "packageManager": "pnpm@9.6.0",
+  "engines": {
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "concurrently -c blue,green \"pnpm --filter @cobalt/backend start:dev\" \"pnpm --filter @cobalt/frontend dev\"",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter @cobalt/backend start:prod",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
