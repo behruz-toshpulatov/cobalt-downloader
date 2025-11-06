@@ -5,6 +5,7 @@ import { runTest } from "../misc/run-test.js";
 import { loadJSON } from "../misc/load-from-fs.js";
 import { Red, Bright } from "../misc/console-text.js";
 import { randomizeCiphers } from "../misc/randomize-ciphers.js";
+import { importOptional } from "../misc/optional-import.js";
 
 import { services } from "../processing/service-config.js";
 
@@ -71,7 +72,11 @@ const printHeader = (service, padLen) => {
 const configureProxy = async () => {
     if (!env.externalProxy) return;
 
+
+    const undici = await importOptional("undici");
+=======
     const undici = await import('undici').catch(() => null);
+
 
     if (!undici) {
         console.warn(

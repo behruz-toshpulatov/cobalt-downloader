@@ -118,6 +118,13 @@ cd vite-frontend
 npm run dev
 ```
 
+### 프론트엔드 + 백엔드 동시 실행 (swagger 스크립트)
+```bash
+pnpm swagger
+```
+- 루트 디렉터리에서 실행하면 백엔드 API(`pnpm --dir api start`)와 프론트엔드(`pnpm --dir vite-frontend dev`)를 동시에 구동합니다.
+- 두 프로세스 중 하나가 종료되면 나머지도 정리되어 개발 세션을 안전하게 종료할 수 있습니다.
+
 ### 프로덕션 빌드
 ```bash
 cd vite-frontend
