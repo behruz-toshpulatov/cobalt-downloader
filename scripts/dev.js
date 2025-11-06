@@ -59,7 +59,7 @@ function main() {
   });
 
   run('next', ['dev', 'frontend', '--port', process.env.FRONTEND_PORT ?? '3000'], {
-    env: { ...process.env, NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001' },
+    env: { ...process.env, NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api' },
     cwd: process.cwd(),
   });
 }

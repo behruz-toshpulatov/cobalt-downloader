@@ -1,27 +1,33 @@
 # Cobalt Downloader
 
-This repository now contains a NestJS backend and a Next.js frontend that can be started together with a single command for a cohesive developer experience.
+This repository pairs a NestJS backend with a Next.js frontend. Both layers can be started together with a single command while still being able to run independently when required.
 
 ## Getting started
 
-1. Install dependencies using your preferred Node package manager (the project is configured for `pnpm`, but `npm` or `yarn` work as well).
-2. Copy `.env.example` to `.env` if you need to override defaults. At runtime the frontend reads `NEXT_PUBLIC_API_URL` and the backend reads `PORT`.
-3. Run both the backend and frontend together:
+1. Install dependencies with your preferred Node package manager (`pnpm` is recommended and configured in `package.json`).
+2. Copy `.env.example` to `.env` to override defaults such as the backend port or API base URL.
+3. Launch both servers concurrently:
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-The backend listens on port **3001** and exposes a `/health` endpoint. The frontend runs on **3000** and fetches the backend welcome payload on load.
+The backend listens on **3001** by default and exposes its routes under the `/api` prefix:
+
+- `GET /api/meta` – service metadata used by the frontend splash screen
+- `GET /api/health` – JSON health probe that includes a timestamp
+- `GET /docs` – interactive Swagger UI generated from the NestJS controllers
+
+The Next.js frontend runs on **3000** and surfaces backend availability plus a shortcut to the API documentation.
 
 ## Available scripts
 
 | Command | Description |
 | --- | --- |
-| `pnpm dev` | Starts the NestJS backend (with hot reload via `ts-node-dev`) and the Next.js frontend (via `next dev`) concurrently. |
-| `pnpm dev:backend` | Runs only the backend in watch mode. |
-| `pnpm dev:frontend` | Runs only the frontend development server. |
+| `pnpm dev` | Starts the NestJS backend (with hot reload) and the Next.js frontend concurrently. |
+| `pnpm dev:backend` | Runs only the backend in watch mode using `ts-node-dev`. |
+| `pnpm dev:frontend` | Runs only the Next.js development server. |
 | `pnpm build` | Builds both applications. |
 | `pnpm build:backend` | Compiles the NestJS backend TypeScript sources into `backend/dist`. |
 | `pnpm build:frontend` | Builds the Next.js frontend. |
@@ -36,4 +42,4 @@ frontend/   # Next.js frontend application
 scripts/    # Development utilities (combined dev orchestrator)
 ```
 
-The frontend is configured with the Next.js App Router and fetches the backend root endpoint to display the service metadata. CORS is enabled on the backend to allow browser calls during development.
+The backend is configured with `@nestjs/config` for environment-driven metadata and `@nestjs/swagger` for generated API documentation. The frontend fetches from the configured API base URL (`NEXT_PUBLIC_API_URL`, defaulting to `http://localhost:3001/api`) and gracefully reports connection issues.

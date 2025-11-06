@@ -1,17 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { AppMetadataDto } from './dto/app-metadata.dto';
 
-@Controller()
+@ApiTags('metadata')
+@Controller('meta')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getRoot() {
-    return this.appService.getWelcomeMessage();
-  }
-
-  @Get('health')
-  getHealth() {
-    return { status: 'ok' };
+  @ApiOperation({ summary: 'Retrieve service metadata for the frontend application.' })
+  @ApiOkResponse({ type: AppMetadataDto })
+  getMetadata(): AppMetadataDto {
+    return this.appService.getMetadata();
   }
 }

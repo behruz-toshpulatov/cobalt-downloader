@@ -1,9 +1,10 @@
 import './globals.css';
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Cobalt Downloader',
-  description: 'Modernized frontend built with Next.js',
+  description: 'Next.js frontend paired with a NestJS backend and Swagger-powered API docs.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
