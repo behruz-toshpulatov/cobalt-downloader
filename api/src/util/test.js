@@ -4,8 +4,8 @@ import { env } from "../config.js";
 import { runTest } from "../misc/run-test.js";
 import { loadJSON } from "../misc/load-from-fs.js";
 import { Red, Bright } from "../misc/console-text.js";
-import { setGlobalDispatcher, ProxyAgent } from "undici";
 import { randomizeCiphers } from "../misc/randomize-ciphers.js";
+import { importOptional } from "../misc/optional-import.js";
 
 import { services } from "../processing/service-config.js";
 
@@ -69,16 +69,32 @@ const printHeader = (service, padLen) => {
     console.log(service + '='.repeat(50));
 }
 
-if (env.externalProxy) {
+const configureProxy = async () => {
+    if (!env.externalProxy) return;
+
+    const undici = await importOptional("undici");
+
+    if (!undici) {
+        console.warn(
+            'external proxy is configured, but the "undici" package is not available. '
+            + 'proxy support will be skipped for tests.'
+        );
+        return;
+    }
+
+    const { setGlobalDispatcher, ProxyAgent } = undici;
     setGlobalDispatcher(new ProxyAgent(env.externalProxy));
-}
+};
 
-env.streamLifespan = 10000;
-env.apiURL = 'http://x/';
-randomizeCiphers();
+const main = async () => {
+    await configureProxy();
 
-const action = process.argv[2];
-switch (action) {
+    env.streamLifespan = 10000;
+    env.apiURL = 'http://x/';
+    randomizeCiphers();
+
+    const action = process.argv[2];
+    switch (action) {
     case "get-services":
         const fromConfig = Object.keys(services);
 
@@ -132,4 +148,7 @@ switch (action) {
         for (const [ service, fails ] of Object.entries(failCounters)) {
             if (fails) console.log(`${Bright(service)} fails: ${fails}`);
         }
-}
+    }
+};
+
+await main();
