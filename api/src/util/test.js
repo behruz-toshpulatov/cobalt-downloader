@@ -72,7 +72,11 @@ const printHeader = (service, padLen) => {
 const configureProxy = async () => {
     if (!env.externalProxy) return;
 
+
     const undici = await importOptional("undici");
+=======
+    const undici = await import('undici').catch(() => null);
+
 
     if (!undici) {
         console.warn(
