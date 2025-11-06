@@ -1,9 +1,24 @@
-import { Constants } from "youtubei.js";
-import { getVersion } from "@imput/version-info";
 import { services } from "./processing/service-config.js";
 import { supportsReusePort } from "./misc/cluster.js";
 
-const version = await getVersion();
+const youtubeImport = import('youtubei.js').catch(() => null);
+const versionInfoImport = import('@imput/version-info').catch(() => null);
+
+const youtubeModule = await youtubeImport;
+if (!youtubeModule) {
+    console.warn(
+        'Failed to load "youtubei.js". Features that rely on Innertube constants may be limited.'
+    );
+}
+
+const Constants = youtubeModule?.Constants ?? { SUPPORTED_CLIENTS: [] };
+
+const versionInfo = await versionInfoImport;
+if (!versionInfo) {
+    console.warn('Failed to load "@imput/version-info". Falling back to "dev" version label.');
+}
+
+const version = versionInfo?.getVersion ? await versionInfo.getVersion() : 'dev';
 
 const disabledServices = process.env.DISABLED_SERVICES?.split(',') || [];
 const enabledServices = new Set(Object.keys(services).filter(e => {
